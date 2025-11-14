@@ -12,12 +12,12 @@
       "require": "./dist/index.cjs"
     },
     "./src/css/seasonal.css": {
-      "import": "./src/css/seasonal.css",
-      "default": "./src/css/seasonal.css"
+      "import": "./dist/css/seasonal.css",
+      "default": "./dist/css/seasonal.css"
     },
     "./src/css/token.css": {
-      "import": "./src/css/token.css",
-      "default": "./src/css/token.css"
+      "import": "./dist/css/token.css",
+      "default": "./dist/css/token.css"
     }
   },
   "sideEffects": [
