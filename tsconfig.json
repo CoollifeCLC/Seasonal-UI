@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    /* Output */
+    "target": "ES2020",
+    "module": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ES2020"],
+
+    /* React + JSX support */
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+
+    /* Module resolution for bundlers (fixes Node10 deprecation) */
+    "moduleResolution": "Bundler",
+
+    /* Type safety & declarations */
+    "declaration": true,
+    "declarationMap": true,
+    "strict": true,
+    "skipLibCheck": true,
+
+    /* Build output paths */
+    "rootDir": "src",
+    "outDir": "dist",
+
+    /* Quality of life */
+    "removeComments": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Inform TS that React + Vite types exist */
+    "types": ["react", "react-dom", "vite/client"]
+  },
+
+  /* Silence deprecation warnings about baseUrl/moduleResolution changes */
+  "ignoreDeprecations": "6.0",
+
+  "include": ["src", "examples", "src/examples/react/main.tsx"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+}

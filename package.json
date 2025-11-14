@@ -1,0 +1,49 @@
+{
+  "name": "seasonal-ui",
+  "version": "0.1.0",
+  "description": "Automatic seasonal and weather-aware UI themes using CSS tokens. React hooks + vanilla.",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "sideEffects": [
+    "**/css/*.css"
+  ],
+  "scripts": {
+    "build": "tsc && vite build",
+    "dev": "vite",
+    "test": "echo \"(add tests)\""
+  },
+  "keywords": [
+    "css",
+    "seasonal",
+    "weather",
+    "themes",
+    "react",
+    "vanilla",
+    "design tokens"
+  ],
+  "author": "Sheron Gibson",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=17",
+    "react-dom": ">=17"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.3",
+    "@types/react-dom": "^19.2.2",
+    "@vitejs/plugin-react": "^5.1.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "typescript": "^5.9.3",
+    "vite": "^5.4.21",
+    "vite-plugin-dts": "^4.5.4",
+    "vite-plugin-static-copy": "^3.1.4"
+  }
+}

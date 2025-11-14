@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" data-season="default" data-wx="clear">
+  <head>
+    <meta charset="utf-8" />
+    <title>Seasonal-UI Vanilla</title>
+    <link rel="stylesheet" href="../../src/css/seasonal.css" />
+    <style>
+      h1 { color: var(--accent); }
+    </style>
+  </head>
+  <body>
+    <h1>Seasonal-UI (Vanilla)</h1>
+    <p id="info"></p>
+
+    <script type="module">
+      import { detectSeason, applySeason } from '../../src/seasonal.ts';
+      import { detectWeatherState, applyWeather } from '../../src/weather.ts';
+
+      const season = detectSeason();
+      applySeason(season);
+
+      const urlWx = new URLSearchParams(location.search).get('weather');
+      const wx = urlWx || await detectWeatherState();
+      applyWeather(wx);
+
+      document.getElementById('info').textContent =
+        `Season: ${season} | Weather: ${wx}`;
+    </script>
+  </body>
+</html>
