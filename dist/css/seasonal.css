@@ -1,0 +1,317 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Seasonal-UI • Token System + Minimal Components
+   Notes:
+   - All colors flow from tokens; seasons/weather only tweak tokens.
+   - Weather FX layer reads --fx-opacity and should be a separate canvas.
+   - Respect a11y: strong focus ring, reduced motion, high-contrast mode.
+────────────────────────────────────────────────────────────────────────────── */
+
+/* Base tokens */
+:root {
+  /* Core */
+  --bg: #0748c0;
+  --fg: #e7eefc;
+  --muted: #9fb3c8;
+  --accent: #66b2ff;
+  --card: #111827;
+  --card-contrast: #0d1526;
+
+  /* Semantics (derived) */
+  --border: color-mix(in oklab, var(--card) 60%, white 40%);
+  --surface: color-mix(in oklab, var(--bg) 85%, white 15%);
+  --surface-hover: color-mix(in oklab, var(--surface) 85%, white 15%);
+  --overlay: color-mix(in oklab, var(--bg) 60%, black 40%);
+  --ring: color-mix(in oklab, var(--accent) 70%, white 30%);
+  --shadow: 0 8px 28px rgba(0,0,0,.35);
+
+  /* Accent variants */
+  --accent-weak: color-mix(in oklab, var(--accent) 70%, white 30%);
+  --accent-strong: color-mix(in oklab, var(--accent) 80%, black 20%);
+
+  /* Status */
+  --ok: #3ddc97;
+  --warn: #f5a524;
+  --err: #ff5151;
+  --info: #3aa2ff;
+
+  /* Radius / spacing / typography */
+  --r-xs: 6px;
+  --r-sm: 10px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --space-1: .25rem;
+  --space-2: .5rem;
+  --space-3: .75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+
+  /* Weather FX */
+  --fx-opacity: 0; /* particle layer opacity */
+
+  /* Utilities */
+  --transition-fast: 160ms cubic-bezier(.2,.8,.2,1);
+  --transition-slow: 280ms cubic-bezier(.2,.8,.2,1);
+}
+
+/* ─── Seasons (override just a few tokens) ─────────────────────────────────── */
+
+html[data-season="default"] { --accent: #66b2ff; }
+
+/* 🌸 Spring */
+html[data-season="spring"] {
+  --bg:#0c1421; --card:#0f1a29; --accent:#82e6c7;
+  --surface: color-mix(in oklab, var(--bg) 85%, #d0ffe5 15%);
+}
+
+/* ☀️ Summer */
+html[data-season="summer"] {
+  --bg:#0b1220; --card:#101a2a; --accent:#5ad0ff;
+  --surface: color-mix(in oklab, var(--bg) 85%, #bfe7ff 15%);
+}
+
+/* 🍂 Fall (Autumn) */
+html[data-season="fall"],
+html[data-season="autumn"] {
+  --bg:#0f0b08; --card:#1a120e; --accent:#ff9a3d;
+  --surface: color-mix(in oklab, var(--bg) 85%, #ffd9b0 12%);
+}
+
+/* 🎃 Halloween (Oct 1–31) */
+html[data-season="halloween"] {
+  --bg:#0b0b0f; --card:#141218; --accent:#ff6a00;
+  --surface: color-mix(in oklab, var(--bg) 85%, #ffb380 10%);
+}
+
+/* 🦃 Thanksgiving (Nov 15–30) */
+html[data-season="thanksgiving"] {
+  --bg:#0f0b08; --card:#1a120e; --accent:#d08b3e;
+}
+
+/* 🎄 Christmas (Dec 1–26) */
+html[data-season="christmas"] {
+  --bg:#0b1117; --card:#0e1a12; --accent:#e74c4c;
+  --accent-weak:#ff8b8b;
+}
+
+/* ✝️ Easter (approx) */
+html[data-season="easter"] {
+  --bg:#0f1126; --card:#16183a; --accent:#b38cff;
+  --surface: color-mix(in oklab, var(--bg) 85%, #b38cff 12%);
+}
+
+/* 🎆 New Year (Dec 27 – Jan 2) — optional */
+html[data-season="newyear"] {
+  --bg:#0a0d18; --card:#0f1526; --accent:#8ad2ff;
+}
+
+/* ─── Weather (layerable) ──────────────────────────────────────────────────── */
+
+html[data-wx="clear"]  { --accent:#6cd1ff; }
+html[data-wx="cloudy"] { --accent:#9fb3c8; }
+html[data-wx="rain"]   { --accent:#3da0ff; --fx-opacity:.35; }
+html[data-wx="snow"]   { --accent:#b9e2ff; --fx-opacity:.30; }
+html[data-wx="storm"]  { --accent:#c8d7ff; --fx-opacity:.40; }
+html[data-wx="fog"]    { --accent:#b3c1cc; }
+html[data-wx="wind"]   { --accent:#8bd3ff; }
+
+/* ─── High Contrast mode (opt-in via data-contrast="high") ─────────────────── */
+
+html[data-contrast="high"] {
+  --border:#ffffff;
+  --fg:#ffffff;
+  --accent:#ffffff;
+  --surface: color-mix(in oklab, var(--bg) 60%, white 40%);
+}
+
+/* ─── Base elements ────────────────────────────────────────────────────────── */
+
+html, body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 30%, white 70%);
+  color: #0b0b0b;
+}
+
+img, svg, canvas, video { max-width: 100%; height: auto; }
+
+/* Scrollbar (modern) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) var(--card);
+}
+*::-webkit-scrollbar { height: 10px; width: 10px; }
+*::-webkit-scrollbar-track { background: var(--card); }
+*::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: var(--r-sm);
+  border: 2px solid var(--card);
+}
+
+/* ─── Cards & Surfaces ─────────────────────────────────────────────────────── */
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: var(--space-4);
+  box-shadow: var(--shadow);
+}
+
+.card.glass, .card { border-radius: 14px; }
+.card { border: 1px solid color-mix(in oklab, var(--card) 55%, white 45%); }
+.navbar .btn, .navbar .btn-ghost { padding: .35rem .6rem; border-radius: 999px; }
+
+.surface {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: var(--space-3);
+}
+
+.surface:hover { background: var(--surface-hover); }
+
+/* ─── Links ────────────────────────────────────────────────────────────────── */
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+a:hover { text-decoration: underline; }
+a:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: var(--r-xs);
+}
+
+/* ─── Buttons ──────────────────────────────────────────────────────────────── */
+
+.button,
+.btn {
+  --btn-bg: var(--accent);
+  --btn-fg: #0b0f17;
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: .5ch;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border: 0;
+  border-radius: var(--r-sm);
+  padding: .625rem .9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), opacity var(--transition-fast);
+  box-shadow: 0 6px 20px color-mix(in oklab, var(--btn-bg) 35%, black 65%);
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); opacity: .9; }
+.btn:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+
+/* Ghost / Outline */
+.btn-ghost {
+  --btn-bg: transparent; --btn-fg: var(--accent);
+  border: 1px solid var(--accent);
+  background: linear-gradient(0deg, color-mix(in oklab, var(--accent) 15%, transparent 85%), transparent);
+  box-shadow: none;
+}
+
+/* Destructive / Success */
+.btn-danger  { --btn-bg: var(--err);  --btn-fg: #0b0b0b; }
+.btn-success { --btn-bg: var(--ok);   --btn-fg: #0b0b0b; }
+
+/* ─── Inputs ───────────────────────────────────────────────────────────────── */
+
+.input, input[type="text"], input[type="email"], input[type="search"], input[type="number"], textarea, select {
+  background: var(--surface);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: .625rem .75rem;
+  width: 100%;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+.input::placeholder, textarea::placeholder { color: color-mix(in oklab, var(--muted) 80%, white 20%); }
+.input:focus, textarea:focus, select:focus,
+input[type="text"]:focus, input[type="email"]:focus, input[type="search"]:focus, input[type="number"]:focus {
+  outline: 2px solid var(--ring); outline-offset: 2px; border-color: var(--accent);
+}
+
+/* ─── Badges / Pills ──────────────────────────────────────────────────────── */
+
+.badge {
+  display: inline-flex; align-items: center; gap: .35ch;
+  padding: .25rem .55rem;
+  border-radius: 999px;
+  font-size: .76rem;
+  background: color-mix(in oklab, var(--accent) 20%, var(--card) 80%);
+  color: var(--accent-weak);
+  border: 1px solid color-mix(in oklab, var(--accent) 40%, var(--card) 60%);
+}
+.badge.ok   { background: color-mix(in oklab, var(--ok) 15%, var(--card) 85%); color: var(--ok); }
+.badge.warn { background: color-mix(in oklab, var(--warn) 15%, var(--card) 85%); color: var(--warn); }
+.badge.err  { background: color-mix(in oklab, var(--err) 15%, var(--card) 85%); color: var(--err); }
+.badge.info { background: color-mix(in oklab, var(--info) 15%, var(--card) 85%); color: var(--info); }
+
+/* ─── Alerts ──────────────────────────────────────────────────────────────── */
+
+.alert {
+  display: grid; grid-template-columns: 20px 1fr; gap: var(--space-3);
+  align-items: start;
+  padding: var(--space-3);
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.alert.ok   { border-color: color-mix(in oklab, var(--ok) 50%, var(--border) 50%); }
+.alert.warn { border-color: color-mix(in oklab, var(--warn) 50%, var(--border) 50%); }
+.alert.err  { border-color: color-mix(in oklab, var(--err) 50%, var(--border) 50%); }
+.alert.info { border-color: color-mix(in oklab, var(--info) 50%, var(--border) 50%); }
+
+/* ─── Nav / Header (example) ──────────────────────────────────────────────── */
+
+.navbar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: linear-gradient(180deg, color-mix(in oklab, var(--card) 90%, black 10%), transparent);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 10;
+  backdrop-filter: blur(8px);
+}
+
+/* ─── Tables (lightweight) ───────────────────────────────────────────────── */
+
+.table {
+  width: 100%; border-collapse: separate; border-spacing: 0;
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--r-md);
+  overflow: hidden;
+}
+.table th, .table td { padding: .75rem 1rem; border-bottom: 1px solid var(--border); }
+.table thead th { text-align: left; color: var(--muted); font-weight: 600; background: color-mix(in oklab, var(--card) 85%, black 15%); }
+.table tbody tr:hover { background: color-mix(in oklab, var(--card) 85%, white 15% / 4%); }
+
+/* ─── Utility helpers ─────────────────────────────────────────────────────── */
+
+.mute { color: var(--muted); }
+.center { display: grid; place-items: center; }
+.stack > * + * { margin-top: var(--space-3); }
+.grid-2 { display:grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+.hidden { display: none !important; }
+
+/* Weather FX canvas */
+.wx-layer {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0; opacity: var(--fx-opacity);
+}
+
+/* Accessibility: reduced motion = hide particle canvas */
+@media (prefers-reduced-motion: reduce) {
+  .wx-layer { display: none !important; }
+}
