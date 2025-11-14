@@ -10,7 +10,9 @@
     ".": {
       "import": "./dist/index.esm.js",
       "require": "./dist/index.cjs"
-    }
+    },
+    "./seasonal.css": "./dist/css/seasonal.css",
+    "./token.css": "./dist/css/token.css"
   },
   "sideEffects": [
     "**/css/*.css"
@@ -20,15 +22,7 @@
     "dev": "vite",
     "test": "echo \"(add tests)\""
   },
-  "keywords": [
-    "css",
-    "seasonal",
-    "weather",
-    "themes",
-    "react",
-    "vanilla",
-    "design tokens"
-  ],
+  "keywords": [ "css", "seasonal", "weather", "themes", "react", "vanilla", "design tokens" ],
   "author": "Sheron Gibson",
   "license": "MIT",
   "peerDependencies": {
